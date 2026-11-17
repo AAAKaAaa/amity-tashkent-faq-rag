@@ -17,6 +17,11 @@ CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", 120))
 
 # Retrieval
 TOP_K = int(os.getenv("TOP_K", 5))
+# "faiss" won the evaluation (eval/run_eval.py): BM25 adds noise because the KB has
+# no Uzbek text and the multilingual embeddings already match paraphrases well.
+RETRIEVAL_MODE = os.getenv("RETRIEVAL_MODE", "faiss")  # faiss | bm25 | hybrid
+RRF_K = int(os.getenv("RRF_K", 60))  # Reciprocal Rank Fusion constant
+BM25_WEIGHT = float(os.getenv("BM25_WEIGHT", 1.0))  # keyword list weight vs semantic (1.0)
 
 # Local embedding model (runs on CPU, no API key needed).
 # Multilingual (~100 languages incl. Uzbek, Russian, Hindi), so a question in any of

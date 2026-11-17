@@ -1,0 +1,60 @@
+{"lang": "en", "q": "Who founded AUT and in which year did it open?", "expected": ["FAQ-002"]}
+{"lang": "en", "q": "What's the address of the campus?", "expected": ["FAQ-003"]}
+{"lang": "en", "q": "Will my Amity degree be recognised by the state in Uzbekistan?", "expected": ["FAQ-007"]}
+{"lang": "en", "q": "Is there a preparatory year before the bachelor's?", "expected": ["FAQ-015", "FAQ-016"]}
+{"lang": "en", "q": "How many years does the computer science engineering degree take?", "expected": ["FAQ-024"]}
+{"lang": "en", "q": "Can I study a master's in IT here?", "expected": ["FAQ-030", "FAQ-031"]}
+{"lang": "en", "q": "Where do Uzbek citizens register their application online?", "expected": ["FAQ-036", "FAQ-035"]}
+{"lang": "en", "q": "What IELTS band do I need for the AI and data science course?", "expected": ["FAQ-045"]}
+{"lang": "en", "q": "I only finished 11 grades of school, can I still apply?", "expected": ["FAQ-043"]}
+{"lang": "en", "q": "When is the last day to submit my application?", "expected": ["FAQ-057"]}
+{"lang": "en", "q": "What are the semester fees for cybersecurity and blockchain?", "expected": ["FAQ-062"]}
+{"lang": "en", "q": "If my visa gets rejected, do I get my money back?", "expected": ["FAQ-074"]}
+{"lang": "en", "q": "Is there a discount if my brother already studies at AUT?", "expected": ["FAQ-080"]}
+{"lang": "en", "q": "Do Amity bachelor graduates get a discount on a master's?", "expected": ["FAQ-079"]}
+{"lang": "en", "q": "How many people live in one hostel room?", "expected": ["FAQ-086"]}
+{"lang": "en", "q": "Is there a doctor or first-aid room on campus?", "expected": ["FAQ-092"]}
+{"lang": "en", "q": "Does the university help with finding a job after graduation?", "expected": ["FAQ-100", "FAQ-101", "FAQ-009"]}
+{"lang": "en", "q": "Can I spend one semester studying in another country?", "expected": ["FAQ-105", "FAQ-104", "FAQ-106"]}
+{"lang": "en", "q": "Will my grades from my old university count if I transfer?", "expected": ["FAQ-113", "FAQ-114"]}
+{"lang": "en", "q": "What plagiarism percentage is allowed in the NTCC report?", "expected": ["FAQ-137"]}
+{"lang": "ru", "q": "Когда открылся университет Амити в Ташкенте?", "expected": ["FAQ-002"]}
+{"lang": "ru", "q": "По какому номеру телефона можно позвонить в университет?", "expected": ["FAQ-006"]}
+{"lang": "ru", "q": "Говорят ли консультанты приёмной комиссии по-русски?", "expected": ["FAQ-008"]}
+{"lang": "ru", "q": "Сколько лет учиться на экономиста?", "expected": ["FAQ-026"]}
+{"lang": "ru", "q": "Есть ли направление по туризму?", "expected": ["FAQ-027", "FAQ-028"]}
+{"lang": "ru", "q": "Кем можно работать после бакалавриата по IT?", "expected": ["FAQ-032"]}
+{"lang": "ru", "q": "Какие документы нужно подать на бакалавриат?", "expected": ["FAQ-042"]}
+{"lang": "ru", "q": "Обязателен ли IELTS для подготовительного курса?", "expected": ["FAQ-050"]}
+{"lang": "ru", "q": "Какие вступительные экзамены сдают на бизнес и экономику?", "expected": ["FAQ-053"]}
+{"lang": "ru", "q": "Гарантировано ли поступление, если у меня есть нужный балл IELTS?", "expected": ["FAQ-058"]}
+{"lang": "ru", "q": "Сколько стоит магистратура по IT за семестр?", "expected": ["FAQ-067"]}
+{"lang": "ru", "q": "Платить за учёбу нужно раз в год или каждый семестр?", "expected": ["FAQ-070"]}
+{"lang": "ru", "q": "Вернут ли деньги, если я передумаю до начала занятий?", "expected": ["FAQ-071"]}
+{"lang": "ru", "q": "Сколько процентов составляет стипендия за высокие баллы на вступительных?", "expected": ["FAQ-077"]}
+{"lang": "ru", "q": "Есть ли в университете столовая?", "expected": ["FAQ-088", "FAQ-089"]}
+{"lang": "ru", "q": "Какие студенческие клубы есть в университете?", "expected": ["FAQ-093", "FAQ-097"]}
+{"lang": "ru", "q": "Можно ли получить двойной диплом с иностранным вузом на IT?", "expected": ["FAQ-108", "FAQ-109"]}
+{"lang": "ru", "q": "Нужна ли иностранцу виза для учёбы?", "expected": ["FAQ-119", "FAQ-120"]}
+{"lang": "ru", "q": "Сколько пропусков допускается?", "expected": ["FAQ-126"]}
+{"lang": "ru", "q": "Что должно быть в итоговом отчёте по NTCC?", "expected": ["FAQ-135"]}
+{"lang": "uz", "q": "Universitet qayerda joylashgan?", "expected": ["FAQ-003"]}
+{"lang": "uz", "q": "Universitetning elektron pochtasi qanday?", "expected": ["FAQ-005"]}
+{"lang": "uz", "q": "Universitet direktori kim?", "expected": ["FAQ-012"]}
+{"lang": "uz", "q": "Qanday yo'nalishlar bor?", "expected": ["FAQ-014"]}
+{"lang": "uz", "q": "Kiberxavfsizlik yo'nalishida necha yil o'qiladi?", "expected": ["FAQ-020", "FAQ-019"]}
+{"lang": "uz", "q": "BBA yo'nalishi bormi?", "expected": ["FAQ-029"]}
+{"lang": "uz", "q": "Chet ellik abituriyentlar qaysi portal orqali ariza topshiradi?", "expected": ["FAQ-037"]}
+{"lang": "uz", "q": "B.Tech uchun IELTS balli qancha bo'lishi kerak?", "expected": ["FAQ-047"]}
+{"lang": "uz", "q": "Keyingi kirish imtihoni qachon?", "expected": ["FAQ-056"]}
+{"lang": "uz", "q": "Sun'iy intellekt yo'nalishi bir semestrga qancha turadi?", "expected": ["FAQ-061"]}
+{"lang": "uz", "q": "Iqtisodiyot yo'nalishining kontrakt narxi qancha?", "expected": ["FAQ-065"]}
+{"lang": "uz", "q": "Birinchi ikki hafta ichida o'qishdan voz kechsam pul qaytariladimi?", "expected": ["FAQ-072"]}
+{"lang": "uz", "q": "Grant yoki stipendiya olish mumkinmi?", "expected": ["FAQ-076", "FAQ-077", "FAQ-082"]}
+{"lang": "uz", "q": "Kutubxona bormi?", "expected": ["FAQ-083", "FAQ-084"]}
+{"lang": "uz", "q": "Talabalar uchun yotoqxona bormi?", "expected": ["FAQ-085"]}
+{"lang": "uz", "q": "Sport zali bepulmi?", "expected": ["FAQ-091", "FAQ-090"]}
+{"lang": "uz", "q": "Startap loyihalar uchun inkubatsiya markazi bormi?", "expected": ["FAQ-098", "FAQ-099"]}
+{"lang": "uz", "q": "Karyera markazi bilan qanday bog'lanaman?", "expected": ["FAQ-102"]}
+{"lang": "uz", "q": "AMIZONE nima?", "expected": ["FAQ-122"]}
+{"lang": "uz", "q": "Haftalik hisobot (WPR) muntazam topshirilishi shartmi?", "expected": ["FAQ-138", "FAQ-134"]}

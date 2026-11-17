@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import math
+import re
+from collections import Counter
 from collections.abc import Iterator
 from functools import lru_cache
 
@@ -54,9 +57,78 @@ def load_vectorstore() -> FAISS:
     )
 
 
-def retrieve(question: str, k: int = config.TOP_K) -> list[tuple[Document, float]]:
-    """Return the k most similar chunks with their L2 distance (lower = closer)."""
-    return load_vectorstore().similarity_search_with_score(question, k=k)
+_TOKEN = re.compile(r"\w+", re.UNICODE)
+
+
+def tokenize(text: str) -> list[str]:
+    # Uzbek Latin uses several apostrophe variants (o', oʻ, o’) — unify them first.
+    text = re.sub(r"[ʻʼ’‘`']", "", text.lower())
+    return _TOKEN.findall(text)
+
+
+class BM25:
+    """Okapi BM25 keyword index over the same chunks that FAISS holds."""
+
+    def __init__(self, docs: list[Document], k1: float = 1.5, b: float = 0.75):
+        self.docs, self.k1, self.b = docs, k1, b
+        self.tfs = [Counter(tokenize(d.page_content)) for d in docs]
+        self.lens = [sum(tf.values()) for tf in self.tfs]
+        self.avg_len = sum(self.lens) / max(len(docs), 1)
+        df = Counter(t for tf in self.tfs for t in tf)
+        n = len(docs)
+        self.idf = {t: math.log(1 + (n - f + 0.5) / (f + 0.5)) for t, f in df.items()}
+
+    def search(self, query: str, k: int) -> list[tuple[Document, float]]:
+        terms = [t for t in tokenize(query) if t in self.idf]
+        scores = []
+        for doc, tf, dl in zip(self.docs, self.tfs, self.lens):
+            s = 0.0
+            for t in terms:
+                f = tf.get(t, 0)
+                if f:
+                    s += self.idf[t] * f * (self.k1 + 1) / (
+                        f + self.k1 * (1 - self.b + self.b * dl / self.avg_len)
+                    )
+            scores.append(s)
+        order = sorted(range(len(scores)), key=lambda i: -scores[i])[:k]
+        return [(self.docs[i], scores[i]) for i in order if scores[i] > 0]
+
+
+@lru_cache(maxsize=1)
+def load_bm25() -> BM25:
+    store = load_vectorstore()
+    ids = [store.index_to_docstore_id[i] for i in range(len(store.index_to_docstore_id))]
+    return BM25([store.docstore.search(i) for i in ids])
+
+
+def retrieve(
+    question: str, k: int = config.TOP_K, mode: str = config.RETRIEVAL_MODE
+) -> list[tuple[Document, float]]:
+    """Return the k best chunks with a score.
+
+    mode="faiss":  semantic search, score = L2 distance (lower = closer)
+    mode="bm25":   keyword search, score = BM25 (higher = better)
+    mode="hybrid": both lists merged with Reciprocal Rank Fusion, score = RRF (higher = better)
+    """
+    if mode == "faiss":
+        return load_vectorstore().similarity_search_with_score(question, k=k)
+    if mode == "bm25":
+        return load_bm25().search(question, k)
+    if mode != "hybrid":
+        raise ValueError(f"Unknown retrieval mode: {mode}")
+
+    depth = max(20, 4 * k)  # look deeper in each list before fusing
+    fused: dict[str, list] = {}
+    rankings = (
+        [d for d, _ in load_vectorstore().similarity_search_with_score(question, k=depth)],
+        [d for d, _ in load_bm25().search(question, depth)],
+    )
+    for weight, ranked in zip((1.0, config.BM25_WEIGHT), rankings):
+        for rank, doc in enumerate(ranked):
+            entry = fused.setdefault(doc.page_content, [doc, 0.0])
+            entry[1] += weight / (config.RRF_K + rank + 1)
+    best = sorted(fused.values(), key=lambda e: -e[1])[:k]
+    return [(doc, score) for doc, score in best]
 
 
 def format_context(docs: list[Document]) -> str:

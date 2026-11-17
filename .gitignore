@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Generated / local data
+faiss_index/
+feedback/
+eval/results/
+
+# OS
+.DS_Store

@@ -9,6 +9,7 @@ import anthropic
 import streamlit as st
 
 import config
+import feedback
 import rag
 import stt
 from i18n import LANGUAGES, TEXTS
@@ -39,8 +40,12 @@ with st.sidebar:
 
     st.divider()
     top_k = st.slider(T["top_k"], 1, 10, config.TOP_K)
+    up, down = feedback.stats()
+    st.caption(T["ratings"].format(up=up, down=down))
     if st.button(T["clear"], use_container_width=True):
         st.session_state.messages = []
+        for key in [k for k in st.session_state if str(k).startswith("fb_")]:
+            del st.session_state[key]  # ratings belong to the old answers
         st.rerun()
 
     has_key = bool(os.getenv("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN"))
@@ -54,9 +59,21 @@ st.caption(T["subtitle"])
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-for msg in st.session_state.messages:
+
+def on_rate(i: int) -> None:
+    rating = st.session_state.get(f"fb_{i}")
+    if rating is not None:
+        msgs = st.session_state.messages
+        feedback.save(msgs[i - 1]["content"], msgs[i]["content"], rating, lang)
+        st.toast(T["thanks"])
+
+
+for i, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        if msg["role"] == "assistant":
+            # Once rated, the widget keeps its value, so each answer is saved at most once per change.
+            st.feedback("thumbs", key=f"fb_{i}", on_change=on_rate, args=(i,))
 
 submitted = st.chat_input(T["placeholder"], accept_audio=True, submit_mode="disable")
 question = ""
@@ -97,6 +114,7 @@ if question:
                 {"role": "user", "content": question},
                 {"role": "assistant", "content": answer},
             ]
+            st.rerun()  # redraw the chat so the new answer gets its 👍/👎 buttons
         except rag.IndexNotFoundError as e:
             st.error(f"{e} {T['no_index']}")
         except anthropic.AuthenticationError:

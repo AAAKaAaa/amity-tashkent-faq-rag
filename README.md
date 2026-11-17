@@ -31,6 +31,7 @@ data/*.pdf  └─────────────────────�
 | `rag.py` | Retriever + prompt + streaming call to Claude |
 | `app.py` | Streamlit chat UI: streaming answers, sources, document upload, index rebuild |
 | `stt.py` | Voice questions: local Whisper (`whisper-large-v3-turbo`) speech-to-text |
+| `feedback.py` | Saves 👍/👎 ratings of answers to `feedback/feedback.jsonl` |
 | `i18n.py` | UI texts in English, Russian and Uzbek |
 | `eval/questions.jsonl`, `eval/run_eval.py` | 60 test questions (EN/RU/UZ) and the retrieval evaluation (Hit@k, MRR) |
 | `data/Amity_University_Tashkent_RAG_FAQ_Knowledge_Base_*.md` | Knowledge base: 138 FAQs about Amity University Tashkent with source URLs and status flags |

@@ -1,5 +1,3 @@
-"""Local speech-to-text with Whisper (Hugging Face transformers), no API key needed."""
-
 from __future__ import annotations
 
 import io
@@ -12,7 +10,6 @@ from transformers import pipeline
 
 import config
 
-# Whisper language names for the UI languages.
 WHISPER_LANG = {"en": "english", "ru": "russian", "uz": "uzbek"}
 
 
@@ -28,7 +25,6 @@ def get_transcriber():
 
 
 def read_wav(data: bytes) -> tuple[np.ndarray, int]:
-    """Decode 16-bit PCM WAV (what Streamlit's recorder produces) to mono float32."""
     with wave.open(io.BytesIO(data)) as w:
         rate, channels, width = w.getframerate(), w.getnchannels(), w.getsampwidth()
         frames = w.readframes(w.getnframes())
@@ -41,9 +37,8 @@ def read_wav(data: bytes) -> tuple[np.ndarray, int]:
 
 
 def transcribe(data: bytes, lang: str | None = None) -> str:
-    """Transcribe WAV bytes. `lang` ("en"/"ru"/"uz") hints Whisper; None = auto-detect."""
     audio, rate = read_wav(data)
-    if audio.size < rate * 0.3:  # under 0.3 s — nothing said
+    if audio.size < rate * 0.3:
         return ""
     gen = {"task": "transcribe"}
     if lang in WHISPER_LANG:

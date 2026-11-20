@@ -1,5 +1,3 @@
-"""Retrieval + generation: FAISS retriever (LangChain) and Claude (Anthropic SDK)."""
-
 from __future__ import annotations
 
 import math
@@ -51,7 +49,6 @@ class IndexNotFoundError(RuntimeError):
 def load_vectorstore() -> FAISS:
     if not (config.INDEX_DIR / "index.faiss").exists():
         raise IndexNotFoundError("FAISS index not found. Run `python ingest.py` first.")
-    # The index is created locally by ingest.py, so deserialising it is safe.
     return FAISS.load_local(
         str(config.INDEX_DIR), get_embeddings(), allow_dangerous_deserialization=True
     )
@@ -61,13 +58,11 @@ _TOKEN = re.compile(r"\w+", re.UNICODE)
 
 
 def tokenize(text: str) -> list[str]:
-    # Uzbek Latin uses several apostrophe variants (o', oʻ, o’) — unify them first.
     text = re.sub(r"[ʻʼ’‘`']", "", text.lower())
     return _TOKEN.findall(text)
 
 
 class BM25:
-    """Okapi BM25 keyword index over the same chunks that FAISS holds."""
 
     def __init__(self, docs: list[Document], k1: float = 1.5, b: float = 0.75):
         self.docs, self.k1, self.b = docs, k1, b
@@ -104,12 +99,6 @@ def load_bm25() -> BM25:
 def retrieve(
     question: str, k: int = config.TOP_K, mode: str = config.RETRIEVAL_MODE
 ) -> list[tuple[Document, float]]:
-    """Return the k best chunks with a score.
-
-    mode="faiss":  semantic search, score = L2 distance (lower = closer)
-    mode="bm25":   keyword search, score = BM25 (higher = better)
-    mode="hybrid": both lists merged with Reciprocal Rank Fusion, score = RRF (higher = better)
-    """
     if mode == "faiss":
         return load_vectorstore().similarity_search_with_score(question, k=k)
     if mode == "bm25":
@@ -117,7 +106,7 @@ def retrieve(
     if mode != "hybrid":
         raise ValueError(f"Unknown retrieval mode: {mode}")
 
-    depth = max(20, 4 * k)  # look deeper in each list before fusing
+    depth = max(20, 4 * k)
     fused: dict[str, list] = {}
     rankings = (
         [d for d, _ in load_vectorstore().similarity_search_with_score(question, k=depth)],
@@ -141,13 +130,12 @@ def format_context(docs: list[Document]) -> str:
 
 @lru_cache(maxsize=1)
 def get_client() -> anthropic.Anthropic:
-    return anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env / .env
+    return anthropic.Anthropic()
 
 
 def build_messages(
     question: str, docs: list[Document], history: list[dict], ui_language: str = "English"
 ) -> list[dict]:
-    """Previous turns as plain text, then the new question with its retrieved context."""
     messages = [{"role": m["role"], "content": m["content"]} for m in history]
     messages.append(
         {
@@ -162,11 +150,6 @@ def build_messages(
 def stream_answer(
     question: str, docs: list[Document], history: list[dict], ui_language: str = "English"
 ) -> Iterator[str]:
-    """Stream the answer text from Claude.
-
-    Server-side refusal fallbacks are on: if the main model declines, the API
-    re-runs the request on a fallback model within the same call.
-    """
     with get_client().beta.messages.stream(
         model=config.LLM_MODEL,
         max_tokens=config.MAX_TOKENS,

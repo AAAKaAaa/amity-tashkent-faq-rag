@@ -1,13 +1,3 @@
-"""Retrieval evaluation: does the right FAQ record come back for each test question?
-
-Usage:  python eval/run_eval.py                 # compares faiss, bm25 and hybrid
-        python eval/run_eval.py --modes hybrid --k 5
-
-Metrics (per language and overall):
-  Hit@1 / Hit@3 / Hit@5 — share of questions whose expected FAQ is in the top 1 / 3 / 5 chunks
-  MRR                   — mean of 1/rank of the first correct chunk (0 if not in top k)
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -20,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-import rag  # noqa: E402
+import rag
 
 QUESTIONS = Path(__file__).with_name("questions.jsonl")
 RESULTS = Path(__file__).with_name("results")
@@ -43,7 +33,7 @@ def evaluate(mode: str, k: int, items: list[dict]) -> dict:
 
 def summarize(rows: list[dict]) -> dict:
     n = len(rows)
-    hit = lambda c: sum(1 for r in rows if r["rank"] and r["rank"] <= c) / n  # noqa: E731
+    hit = lambda c: sum(1 for r in rows if r["rank"] and r["rank"] <= c) / n
     return {
         "n": n,
         "hit@1": hit(1),

@@ -1,5 +1,3 @@
-"""Store 👍/👎 ratings of bot answers in feedback/feedback.jsonl (one JSON object per line)."""
-
 from __future__ import annotations
 
 import json
@@ -11,7 +9,6 @@ FEEDBACK_FILE = config.BASE_DIR / "feedback" / "feedback.jsonl"
 
 
 def save(question: str, answer: str, rating: int, lang: str) -> None:
-    """rating: 1 = 👍, 0 = 👎 (Streamlit's st.feedback("thumbs") values)."""
     FEEDBACK_FILE.parent.mkdir(exist_ok=True)
     record = {
         "time": datetime.now().isoformat(timespec="seconds"),
@@ -25,7 +22,6 @@ def save(question: str, answer: str, rating: int, lang: str) -> None:
 
 
 def stats() -> tuple[int, int]:
-    """(number of 👍, number of 👎) collected so far."""
     if not FEEDBACK_FILE.exists():
         return 0, 0
     ratings = [json.loads(line)["rating"] for line in FEEDBACK_FILE.read_text().splitlines() if line]

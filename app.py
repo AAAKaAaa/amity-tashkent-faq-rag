@@ -1,8 +1,3 @@
-"""Streamlit UI for the University FAQ RAG chatbot.
-
-Run:  streamlit run app.py
-"""
-
 import os
 
 import anthropic
@@ -17,7 +12,6 @@ from ingest import build_index
 
 st.set_page_config(page_title="Amity Tashkent FAQ", page_icon="🎓", layout="centered")
 
-# ---------- Sidebar: language + knowledge base management ----------
 with st.sidebar:
     lang_name = st.selectbox("🌐 Language / Язык / Til", list(LANGUAGES), key="lang_name")
     lang = LANGUAGES[lang_name]
@@ -45,14 +39,13 @@ with st.sidebar:
     if st.button(T["clear"], use_container_width=True):
         st.session_state.messages = []
         for key in [k for k in st.session_state if str(k).startswith("fb_")]:
-            del st.session_state[key]  # ratings belong to the old answers
+            del st.session_state[key]
         st.rerun()
 
     has_key = bool(os.getenv("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN"))
     if not has_key:
         st.warning(T["no_key"])
 
-# ---------- Chat ----------
 st.title(T["title"])
 st.caption(T["subtitle"])
 
@@ -72,7 +65,6 @@ for i, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if msg["role"] == "assistant":
-            # Once rated, the widget keeps its value, so each answer is saved at most once per change.
             st.feedback("thumbs", key=f"fb_{i}", on_change=on_rate, args=(i,))
 
 submitted = st.chat_input(T["placeholder"], accept_audio=True, submit_mode="disable")
@@ -83,7 +75,7 @@ if submitted:
         try:
             with st.spinner(T["transcribing"]):
                 question = stt.transcribe(submitted.audio.getvalue(), lang)
-        except Exception as e:  # model download / decoding problems
+        except Exception as e:
             st.error(f"{T['stt_error']} {e}")
         if not question:
             st.warning(T["no_speech"])
@@ -103,7 +95,6 @@ if question:
             st.error(T["no_key"])
             st.stop()
         try:
-            # Include the previous question so follow-ups like "and for MBA?" retrieve well.
             prev_q = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
             query = f"{prev_q}\n{question}" if len(question.split()) < 6 and prev_q else question
             docs = [d for d, _ in rag.retrieve(query, k=top_k)]
@@ -114,7 +105,7 @@ if question:
                 {"role": "user", "content": question},
                 {"role": "assistant", "content": answer},
             ]
-            st.rerun()  # redraw the chat so the new answer gets its 👍/👎 buttons
+            st.rerun()
         except rag.IndexNotFoundError as e:
             st.error(f"{e} {T['no_index']}")
         except anthropic.AuthenticationError:

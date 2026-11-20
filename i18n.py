@@ -1,5 +1,3 @@
-"""UI translations: English, Russian, Uzbek (Latin script)."""
-
 LANGUAGES = {"English": "en", "Русский": "ru", "O'zbekcha": "uz"}
 
 TEXTS = {

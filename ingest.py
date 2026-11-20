@@ -1,9 +1,3 @@
-"""Build the FAISS vector index from documents in data/.
-
-Usage:
-    python ingest.py            # index everything in data/
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,7 +13,6 @@ SUPPORTED = {".md", ".txt", ".pdf"}
 
 
 def load_documents(data_dir: Path = config.DATA_DIR) -> list[Document]:
-    """Load .md / .txt / .pdf files into LangChain Documents."""
     docs: list[Document] = []
     for path in sorted(data_dir.rglob("*")):
         if path.suffix.lower() not in SUPPORTED or not path.is_file():
@@ -37,7 +30,6 @@ def load_documents(data_dir: Path = config.DATA_DIR) -> list[Document]:
 
 
 def split_documents(docs: list[Document]) -> list[Document]:
-    """Split Markdown by headings first (one FAQ = one chunk), then by size."""
     md_splitter = MarkdownHeaderTextSplitter(
         headers_to_split_on=[("#", "h1"), ("##", "section"), ("###", "question")],
         strip_headers=False,

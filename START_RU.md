@@ -9,7 +9,7 @@
 2. Установите зависимости (один раз, ~2 ГБ):
    ```bash
    python3 -m venv .venv
-   source .venv/bin/activate          # Windows: .venv\Scripts\activate
+   source .venv/bin/activate
    pip install -r requirements.txt
    ```
 3. Создайте файл с ключом:

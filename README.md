@@ -42,8 +42,8 @@ data/*.pdf  └─────────────────────�
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # then put your Anthropic API key in .env
-python ingest.py            # build the FAISS index (first run downloads the embedding model, ~470 MB)
+cp .env.example .env
+python ingest.py
 streamlit run app.py
 ```
 
@@ -58,7 +58,7 @@ Set `STT_MODEL=openai/whisper-small` in `.env` for a smaller, faster (but less a
 ## Evaluating retrieval
 
 ```bash
-python eval/run_eval.py            # compares faiss, bm25 and hybrid (BM25 + FAISS, Reciprocal Rank Fusion)
+python eval/run_eval.py
 ```
 
 | Retrieval | Hit@1 | Hit@3 | Hit@5 | MRR |
